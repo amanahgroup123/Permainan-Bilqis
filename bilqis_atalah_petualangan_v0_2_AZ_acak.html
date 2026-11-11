@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#bdeafa">
+<meta name="description" content="Game petualangan edukasi Bilqis dan Abang Atalah. Bermain huruf, berhitung, dan merawat kelinci di Hutan Ajaib.">
+<title>Bilqis & Abang Atalah — Hutan Ajaib v0.2 (Huruf A–Z)</title>
+<style>
+:root{--ink:#24415d;--muted:#64819b;--pink:#ff76ab;--purple:#9474e5;--mint:#4fbb9d;--blue:#5c9bea;--yellow:#ffe17a;--shadow:0 12px 26px rgba(30,78,104,.14)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;min-height:100%;font-family:ui-rounded,"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#dcf4fc}
+body{overscroll-behavior-y:none}
+button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid #274ec9;outline-offset:3px}
+#app{position:relative;max-width:500px;min-height:100vh;min-height:100dvh;margin:0 auto;background:#f6fcff;box-shadow:0 0 45px #b3ddec;overflow:hidden;display:flex;flex-direction:column}
+.screen{display:flex;flex-direction:column;flex:1;min-height:100vh;min-height:100dvh;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:.4;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.topbar{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 10px;background:#fff;z-index:5;box-shadow:0 2px 12px rgba(58,99,126,.06)}
+.topbar .heading{font-size:15px;font-weight:900;text-align:center;flex:1;line-height:1.2}
+.topbar .sub{display:block;font-size:10px;font-weight:700;color:#80a0af;margin-top:3px;letter-spacing:.6px}
+.iconbtn{min-width:43px;min-height:43px;border:0;border-radius:15px;background:#f0f6ff;color:#37628a;font-size:22px;display:grid;place-items:center}
+.star-count{border:0;border-radius:15px;background:#fff2c4;color:#826018;padding:10px 13px;display:flex;align-items:center;gap:4px;font-weight:950;min-height:43px}
+.content{padding:16px 16px calc(22px + env(safe-area-inset-bottom,0px));flex:1}
+.btn{border:0;border-bottom:5px solid rgba(0,0,0,.11);border-radius:19px;min-height:58px;padding:12px 20px;font-weight:900;font-size:18px;color:#fff;background:var(--pink);box-shadow:0 7px 14px rgba(194,74,120,.12);display:inline-flex;justify-content:center;align-items:center;gap:9px;text-align:center;transition:transform .12s}
+.btn:active,.iconbtn:active,.choice:active,.task:active,.produce:active{transform:scale(.965)}
+.btn.green{background:#35b794}.btn.blue{background:#5399e7}.btn.purple{background:#9675ea}.btn.ghost{color:#4c6983;background:#ebf3ff;border-bottom-color:#d0e1f4;font-size:15px}
+.btn.full{width:100%}.btn.small{min-height:48px;font-size:15px;padding:10px 14px;border-radius:15px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.82);padding:8px 13px;border-radius:999px;font-size:12px;font-weight:900;color:#567894}
+.caption{font-size:13px;color:var(--muted);line-height:1.55}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+/* Cover */
+.cover{background:linear-gradient(#c2ecff 0%,#ecfbff 59%,#fff3d1 100%);position:relative;justify-content:space-between;overflow:hidden}
+.cover-top{position:relative;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 5px;z-index:2}
+.brand-small{display:inline-block;background:#fff;border-radius:22px;padding:9px 15px;font-weight:900;color:#6385a7;font-size:11px;letter-spacing:1px;box-shadow:0 4px 14px #86c3d451}
+.cover h1{font-size:clamp(35px,9.4vw,52px);line-height:1.09;letter-spacing:-2px;margin:17px 0 11px;color:#2f5d7d;text-shadow:0 4px 0 #fff}
+.cover h1 em{font-style:normal;color:#f06d9b}
+.cover h1 small{display:block;font-size:.53em;color:#8368c7;letter-spacing:-.4px;margin-top:8px}
+.cover-top p{margin:12px auto 0;font-weight:750;color:#60829d;font-size:14px;max-width:310px}
+.landscape{height:37vh;min-height:248px;max-height:390px;position:relative;margin:0 4px;overflow:hidden;border-radius:48% 48% 25px 25px / 17% 17% 25px 25px;background:linear-gradient(#8fddfa 0%,#d0f2fe 59%,#86d49f 60%,#5ebf82 100%)}
+.cloud{position:absolute;width:88px;height:26px;background:#fff;border-radius:28px;filter:drop-shadow(0 4px 0 #ffffff66);opacity:.9}
+.cloud:before{content:"";position:absolute;border-radius:50%;background:#fff;width:46px;height:41px;left:15px;bottom:6px}.cloud:after{content:"";position:absolute;border-radius:50%;background:#fff;width:36px;height:33px;right:8px;bottom:3px}
+.cloud.a{top:14%;left:8%;transform:scale(.8)}.cloud.b{top:25%;right:4%;transform:scale(.58)}
+.sun{width:65px;height:65px;position:absolute;right:17%;top:10%;border-radius:50%;background:#ffeb90;box-shadow:0 0 0 13px #ffed9570,0 0 0 26px #fff1a93b}
+.hill{position:absolute;background:#78ca8c;border-radius:50% 50% 0 0;bottom:22%;width:130%;left:-25%;height:35%;transform:rotate(-8deg)}
+.hill.r{background:#a3dd97;left:22%;bottom:21%;transform:rotate(9deg);height:29%}
+.grass{position:absolute;bottom:0;left:0;right:0;height:37%;background:linear-gradient(165deg,#81da92,#44b978);border-radius:50% 50% 0 0 / 18% 18% 0 0}
+.path{position:absolute;bottom:-85px;left:28%;width:49%;height:180px;border-radius:60% 40% 0 0;background:#f6d69b;transform:rotate(7deg)}
+.flower{position:absolute;font-size:24px;z-index:2;animation:wiggle 2.5s ease-in-out infinite alternate}
+@keyframes wiggle{to{transform:rotate(12deg)}}
+.tree{position:absolute;bottom:24%;height:44%;width:27%;z-index:1;pointer-events:none}
+.tree .trunk{position:absolute;bottom:0;left:43%;height:62%;width:18%;border-radius:12px;background:#a76b4d}
+.tree .crown{position:absolute;width:100%;height:67%;background:#3faf79;border-radius:48%;left:0;top:0;box-shadow:inset -13px -8px 0 #299968}
+.tree .crown:after{content:"";position:absolute;background:#66cb80;width:65%;height:65%;left:-10%;top:23%;border-radius:50%}
+.tree.left{left:-4%;transform:scale(.87)}.tree.right{right:-4%;transform:scale(.95)}
+.actors{position:absolute;z-index:3;display:flex;align-items:flex-end;justify-content:center;gap:0;left:50%;bottom:8%;transform:translateX(-50%);filter:drop-shadow(0 9px 5px #345e5160)}
+.actor{display:block;flex:0 0 auto;animation:bounce 2.1s ease-in-out infinite}.actor.boy{animation-delay:-.4s}.actor svg{display:block;width:100%;height:auto}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.cover-bottom{position:relative;z-index:3;padding:12px 22px calc(env(safe-area-inset-bottom,0px) + 24px);background:linear-gradient(#fff9e800,#fff9ed 20%,#fff 100%);display:flex;flex-direction:column;gap:11px}
+.cover-bottom .note{text-align:center;font-size:12px;color:#8ba2ae;margin:2px 0 0}
+/* Map */
+.map-lead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 13px}.map-lead h2{margin:0 0 3px;font-size:23px;letter-spacing:-.6px}.map-lead p{margin:0;font-size:12px;color:#6f91a3;font-weight:750}
+.scene{height:clamp(265px,40vh,385px);border-radius:26px;position:relative;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(#98e0fb 0%,#d6f5fb 48%,#a1da8b 49%,#6fc589 100%);touch-action:manipulation;isolation:isolate}
+.scene:after{content:"";position:absolute;width:130%;height:35%;left:-15%;bottom:-14%;background:#5bb97e;border-radius:50% 50% 0 0;z-index:0}
+.scene .tree{z-index:1;height:40%;bottom:27%}.scene .tree.left{left:3%;transform:scale(.75)}.scene .tree.right{right:2%;transform:scale(.72)}
+.scene .walkers{position:absolute;bottom:10px;left:48%;transform:translateX(-50%);display:flex;align-items:flex-end;z-index:4;transition:left .85s cubic-bezier(.3,.1,.3,1);pointer-events:none;filter:drop-shadow(0 5px 4px #215f3b40)}
+.scene .walkers.walk .actor{animation:walking .22s ease-in-out infinite alternate}
+@keyframes walking{to{transform:translateY(-8px) rotate(-3deg)}}
+.hotspot{position:absolute;z-index:3;min-width:82px;min-height:91px;background:#fffdf9ee;border:3px solid #fff;border-bottom:6px solid #fff7;border-radius:23px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:3px;color:#3a6b85;font-weight:900;font-size:12px;box-shadow:0 7px 13px #2f6c5e36;animation:float 2.7s ease-in-out infinite}
+.hotspot .emoji{font-size:39px;line-height:1}.hotspot.done{background:#fff9e8}.hotspot.done:after{content:"⭐";position:absolute;top:-15px;right:-10px;font-size:22px}
+@keyframes float{50%{transform:translateY(-5px)}}
+.hotspot.hletters{left:6%;top:14%}.hotspot.hcount{right:6%;top:17%;animation-delay:-.7s}.hotspot.hfeed{right:4%;bottom:10%;animation-delay:-1.4s}
+.scene .map-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:5;color:#386d73;font-size:11px;font-weight:900;background:#fff9;padding:6px 12px;border-radius:50px;white-space:nowrap;pointer-events:none}
+.task-title{font-size:16px;font-weight:1000;margin:21px 0 12px;display:flex;align-items:center;gap:8px}
+.tasklist{display:grid;grid-template-columns:1fr;gap:10px}
+.task{border:2px solid #edf1ff;border-bottom:5px solid #dce8f5;border-radius:20px;background:#fff;display:flex;align-items:center;text-align:left;padding:11px 13px;min-height:83px;gap:13px;color:#294969;box-shadow:0 5px 11px #a1bfd023}
+.task .square{width:57px;height:57px;border-radius:17px;flex-shrink:0;display:grid;place-items:center;font-size:33px;background:#f5e9ff}.task .square.yellow{background:#fff0c5}.task .square.mint{background:#d7f7e7}
+.task b{display:block;font-size:15px;margin-bottom:5px}.task small{font-weight:700;color:#88a0b0}.task .go{margin-left:auto;color:#8fa5ba;font-size:23px;font-weight:900}
+/* Mini games */
+.game{background:linear-gradient(#e4f7ff,#fbfdff 45%,#fff);min-height:100%}
+.stepper{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 16px}
+.stepper i{display:block;width:39px;height:9px;border-radius:100px;background:#e0eaf2}.stepper i.active{background:#6accae}.stepper i.now{background:#ffd16f}
+.guide{display:flex;align-items:center;gap:4px;margin:0 0 15px;padding:11px;background:#fff;border-radius:21px;box-shadow:0 5px 14px #accde02b}
+.guide .speech{flex:1;font-size:14px;font-weight:850;line-height:1.42;background:#edf6ff;border-radius:18px;padding:12px 13px;color:#345f85;min-height:68px;display:flex;align-items:center}
+.guide .replay{border:0;align-self:center;border-radius:14px;width:45px;height:45px;background:#e8f2ff;font-size:23px;flex-shrink:0}
+.panel{background:white;border-radius:27px;padding:20px 15px;border:2px solid #eaf1f9;box-shadow:var(--shadow)}
+.game-title{text-align:center;font-size:23px;letter-spacing:-.6px;margin:5px 0 5px}.game-help{text-align:center;color:#7894a4;font-size:13px;font-weight:700;line-height:1.5;margin:0 0 15px}
+.letter-illustration{width:128px;height:128px;margin:2px auto 12px;border-radius:33px;background:linear-gradient(140deg,#ffefbb,#ffdbf0);display:grid;place-items:center;font-size:78px;box-shadow:inset 0 -8px 0 #ffcf9c66}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 14px}
+.choice{height:105px;border:2px solid #e2e9fa;border-bottom:8px solid #bfd7ea;background:#f4f9ff;color:#486db0;border-radius:24px;font-weight:1000;font-size:62px;line-height:1}
+.choice:nth-child(2){background:#fff0f7;border-color:#ffe0f0;border-bottom-color:#ffc0d6;color:#e37aa3}.choice:nth-child(3){background:#fff5d9;border-color:#ffe9b7;border-bottom-color:#efd68e;color:#ae842e}
+.choice.wrong{opacity:.54;transform:scale(.95)}
+.feedback{text-align:center;background:#fff7d9;color:#996520;border-radius:16px;padding:12px 14px;margin-top:10px;font-weight:850;font-size:14px}
+.good{background:#e2faee;color:#258663}
+.produce-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:22px 0 16px;min-height:88px}
+.produce{width:78px;height:82px;border:0;border-radius:21px;background:#f5faff;border-bottom:6px solid #d9e9f6;font-size:46px;display:grid;place-items:center;position:relative;transition:all .17s}
+.produce.chosen{background:#d2f5e4;border-bottom-color:#a4e3c5;transform:translateY(-4px)}
+.produce.chosen:after{content:"✔";position:absolute;right:-3px;top:-8px;font-size:17px;background:#35b794;color:white;width:25px;height:25px;border-radius:50%;display:grid;place-items:center}
+.big-number{font-size:64px;font-weight:1000;color:#e79a34;margin:0;text-shadow:0 5px 0 #ffe6b7}
+.count-card{text-align:center;border-radius:19px;background:#fff8e4;padding:15px;margin:8px 0 13px}
+.count-card p{font-weight:850;margin:4px 0 0;color:#a57843}
+.rabbit-world{height:220px;position:relative;border-radius:26px;background:linear-gradient(#d5f5ff 0%,#d8f6e6 65%,#90dba0 65%);overflow:hidden;display:grid;place-items:center}
+.rabbit{font-size:123px;filter:drop-shadow(0 8px 3px #5c987445);line-height:1;transition:transform .25s}
+.rabbit.happy{transform:scale(1.1) rotate(-8deg)}
+.rabbit-world:after{content:"🌼 🌷 🌼";position:absolute;bottom:3px;left:15px;font-size:23px}
+.feed-tray{margin:13px 0 15px;border-radius:22px;background:#fff6dc;padding:17px 9px;text-align:center}
+.feed-tray p{margin:0 0 12px;font-weight:850;color:#9b7747;font-size:13px}
+.carrots{display:flex;justify-content:center;gap:10px}
+.carrot{width:77px;height:80px;border-radius:20px;border:3px solid #fff;border-bottom:6px solid #f0c979;background:#fff;font-size:46px;touch-action:none;user-select:none;position:relative;z-index:2}
+.carrot.eaten{visibility:hidden}.carrot.dragging{opacity:.72;z-index:20}
+.sticker-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:13px;font-size:28px}
+/* All 26 letters, large touch targets and readable progress */
+.alphabet-progress{background:#fff;border:2px solid #e9f0fc;border-radius:22px;padding:13px 14px;margin:0 0 12px}
+.alphabet-info{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:900;color:#54718d}
+.alphabet-info strong{color:#278d7a;font-size:17px}
+.progress-track{height:11px;border-radius:999px;overflow:hidden;background:#e5eff6;margin:9px 0 12px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#68c8af,#83d88a);border-radius:999px;transition:width .3s ease}
+.alphabet-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.letter-dot{min-width:0;min-height:35px;border-radius:10px;display:grid;place-items:center;font-size:15px;font-weight:950;color:#8aa1b3;background:#eef4f8;border:2px solid transparent}
+.letter-dot.learned{background:#c6f3d9;color:#267e58}
+.letter-dot.current{background:#ffdb86;color:#7e541c;border-color:#ffc454;box-shadow:0 2px 0 #f5c064}
+.letters-done-label{font-size:12px;color:#7894a4;margin:10px 0 0;text-align:center;font-weight:750}
+.alphabet-book-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.alphabet-book-card{background:#fff;border:2px solid #e8eff9;border-bottom:5px solid #dbe8f6;border-radius:18px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#4a6e9f;touch-action:manipulation}
+.alphabet-book-card:active{transform:scale(.97)}
+.alphabet-book-card .book-emoji{font-size:28px}.alphabet-book-card .book-letter{font-size:30px;font-weight:1000;line-height:1}
+.alphabet-book-card small{font-size:10px;font-weight:800;color:#7894a4}
+.alphabet-book-card.learned{background:#f0fdf6;border-color:#b9ecd3}
+.alphabet-card-label{font-weight:900;font-size:15px;color:#496d85;margin:12px 0}
+/* Reward */
+.reward{background:linear-gradient(180deg,#dcf7ff,#fff4cd 68%,#fffaf0);text-align:center;justify-content:center}
+.reward-content{margin:auto;padding:25px 18px;width:100%}
+.reward .stars{font-size:54px;letter-spacing:4px;animation:pop .7s ease-out infinite alternate}
+@keyframes pop{to{transform:scale(1.12)}}
+.reward h2{font-size:34px;color:#d88d27;margin:16px 0 8px}.reward p{color:#587c97;font-weight:750;line-height:1.55}
+.reward .sticker{width:156px;height:156px;margin:22px auto;background:#fff;border:7px solid #fff5c1;border-radius:50%;font-size:100px;display:grid;place-items:center;box-shadow:0 13px 27px #d29d5150;transform:rotate(-6deg)}
+.reward-actors{display:flex;justify-content:center;align-items:flex-end;margin:10px 0 20px}
+/* Parent */
+.settings h2{font-size:24px;margin:5px 0 6px}.settings .setting-card{border-radius:22px;background:#fff;border:2px solid #edf2f8;padding:15px;margin-top:13px}
+.settings .setting-card h3{margin:0 0 8px;font-size:17px}.settings .setting-card p{margin:0 0 12px;color:#6e899e;font-size:13px;line-height:1.58}
+.settings .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.toggle{background:#d9e6ef;color:#4a6b7e;border:0;border-radius:50px;padding:11px 15px;font-weight:900;min-width:100px}.toggle.on{background:#c9f6e5;color:#17885f}
+.footer-credits{text-align:center;font-size:11px;color:#8b9fb1;padding:4px 10px 15px}
+@media(min-width:501px){body{padding:12px 0}#app{min-height:calc(100dvh - 24px);border-radius:31px;box-shadow:0 16px 60px #3d82a236}.screen{min-height:calc(100dvh - 24px)}}
+@media(max-width:360px){.cover h1{font-size:36px}.content{padding-left:12px;padding-right:12px}.letter-illustration{width:108px;height:108px;font-size:65px}.choice{height:88px;font-size:51px}.produce{width:67px;height:76px;font-size:42px}.guide .speech{font-size:12px}.hotspot{min-width:77px;min-height:85px}.scene .walkers{bottom:5px}}
+@media(max-height:690px){.cover-top{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}.cover h1{font-size:34px;margin:7px 0}.landscape{min-height:190px;height:31vh}.cover-bottom{padding-top:5px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}.cover-top p{font-size:12px}.content{padding-top:11px}.scene{height:260px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app"><div class="screen" style="align-items:center;justify-content:center"><h2>🌈 Memulai Dunia Ajaib...</h2></div></div>
+<script>
+(() => {
+'use strict';
+const APP = document.getElementById('app');
+const KEY = 'bilqis_atalah_v01_saved';
+const games = {
+  letters:{title:'Jelajah Huruf A–Z',emoji:'🔤',prize:'📚',name:'Buku Huruf'},
+  count:{title:'Hitung Buah',emoji:'🍎',prize:'🧺',name:'Keranjang Ceria'},
+  feed:{title:'Kelinci Lala',emoji:'🐰',prize:'🥕',name:'Wortel Emas'}
+};
+const words = [
+ {letter:'A',noun:'apel',emoji:'🍎',sound:'a'},
+ {letter:'B',noun:'bola',emoji:'⚽',sound:'be'},
+ {letter:'C',noun:'cicak',emoji:'🦎',sound:'ce'},
+ {letter:'D',noun:'dadu',emoji:'🎲',sound:'de'},
+ {letter:'E',noun:'elang',emoji:'🦅',sound:'e'},
+ {letter:'F',noun:'foto',emoji:'📸',sound:'ef'},
+ {letter:'G',noun:'gajah',emoji:'🐘',sound:'ge'},
+ {letter:'H',noun:'harimau',emoji:'🐯',sound:'ha'},
+ {letter:'I',noun:'ikan',emoji:'🐟',sound:'i'},
+ {letter:'J',noun:'jeruk',emoji:'🍊',sound:'je'},
+ {letter:'K',noun:'kelinci',emoji:'🐰',sound:'ka'},
+ {letter:'L',noun:'lebah',emoji:'🐝',sound:'el'},
+ {letter:'M',noun:'mobil',emoji:'🚗',sound:'em'},
+ {letter:'N',noun:'nanas',emoji:'🍍',sound:'en'},
+ {letter:'O',noun:'obor',emoji:'🔥',sound:'o'},
+ {letter:'P',noun:'pisang',emoji:'🍌',sound:'pe'},
+ {letter:'Q',noun:'quokka',emoji:'🦘',sound:'kiu'},
+ {letter:'R',noun:'roti',emoji:'🍞',sound:'er'},
+ {letter:'S',noun:'sapi',emoji:'🐮',sound:'es'},
+ {letter:'T',noun:'topi',emoji:'🧢',sound:'te'},
+ {letter:'U',noun:'ular',emoji:'🐍',sound:'u'},
+ {letter:'V',noun:'vas',emoji:'🏺',sound:'ve'},
+ {letter:'W',noun:'wortel',emoji:'🥕',sound:'we'},
+ {letter:'X',noun:'xilofon',emoji:'🎼',sound:'eks'},
+ {letter:'Y',noun:'yoyo',emoji:'🪀',sound:'ye'},
+ {letter:'Z',noun:'zebra',emoji:'🦓',sound:'zet'}
+];
+const alphabetLetters = words.map(w=>w.letter);
+const byLetter = Object.fromEntries(words.map(w=>[w.letter,w]));
+const shuffle = items => {
+ const out=[...items];
+ for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}
+ return out;
+};
+function freshAlphabet(excludeFirst=''){
+ const remaining=shuffle(alphabetLetters);
+ if(excludeFirst&&remaining[0]===excludeFirst&&remaining.length>1){[remaining[0],remaining[1]]=[remaining[1],remaining[0]]}
+ return {remaining,mastered:[],cycles:0,totalSolved:0,lastLetter:excludeFirst};
+}
+function validateAlphabet(v){
+ if(!v||typeof v!=='object'||!Array.isArray(v.remaining)||!Array.isArray(v.mastered))return null;
+ const rem=v.remaining.filter(l=>alphabetLetters.includes(l)),mas=v.mastered.filter(l=>alphabetLetters.includes(l));
+ const unique=[...new Set([...rem,...mas])];
+ if(unique.length!==26||new Set(rem).size!==rem.length||new Set(mas).size!==mas.length||rem.some(l=>mas.includes(l)))return null;
+ return {...v,remaining:rem,mastered:mas,cycles:Number(v.cycles)||0,totalSolved:Number(v.totalSolved)||0,lastLetter:String(v.lastLetter||'')};
+}
+function makeQuestion(letter){
+ const choices=shuffle([letter,...shuffle(alphabetLetters.filter(l=>l!==letter)).slice(0,2)]);
+ return {...byLetter[letter],options:choices};
+}
+let letterSession=[];let letterMode='short';
+function alphabetProgress(current=''){
+ const a=saved.alphabet,percentage=Math.round(a.mastered.length*100/26);
+ return `<div class="alphabet-progress"><div class="alphabet-info"><span>🌈 Koleksi Huruf A–Z</span><strong>${a.mastered.length}/26</strong></div>
+ <div class="progress-track" role="progressbar" aria-valuenow="${a.mastered.length}" aria-valuemin="0" aria-valuemax="26"><div class="progress-fill" style="width:${percentage}%"></div></div>
+ <div class="alphabet-grid">${alphabetLetters.map(l=>`<span class="letter-dot ${a.mastered.includes(l)?'learned':l===current?'current':''}" aria-label="Huruf ${l}${a.mastered.includes(l)?' sudah ditemukan':''}">${l}</span>`).join('')}</div>
+ <p class="letters-done-label">${a.mastered.length===26?'🎉 Semua 26 huruf ditemukan!':'Hijau = sudah ditemukan • Kuning = huruf sekarang'}</p></div>`;
+}
+const rounds = [
+ {n:2,fruit:'🍎',name:'apel'},
+ {n:3,fruit:'🍌',name:'pisang'},
+ {n:4,fruit:'🍓',name:'stroberi'}
+];
+const fallback = {completed:[],sound:true};
+let saved = {...fallback};
+try {const read=JSON.parse(localStorage.getItem(KEY)||'{}'); saved={...fallback,...read}; if(!Array.isArray(saved.completed))saved.completed=[]}catch(e){}
+saved.alphabet=validateAlphabet(saved.alphabet)||freshAlphabet();
+let screen='home',task='letters',stage=0,wrong='',chosen=new Set(),feed=0,moveX=49,walking=false,lastPrompt='',availableVoice=null;
+let audioCtx=null, drag=null, ignoreClickUntil=0;
+const safeStore=()=>{try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}};
+const done=k=>saved.completed.includes(k);
+const total=()=>Object.keys(games).filter(done).length;
+
+function actor(name,size=100){
+ const girl=name==='bilqis';
+ // Original lightweight SVG sprites: no network dependencies.
+ return `<span class="actor ${girl?'girl':'boy'}" style="width:${size}px" aria-label="${girl?'Bilqis':'Abang Atalah'}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 192" role="img" aria-hidden="true">
+ <ellipse cx="62" cy="185" rx="37" ry="6" fill="#337857" opacity=".18"/>
+ <rect x="42" y="143" width="18" height="33" rx="8" fill="#d68f65"/><rect x="72" y="143" width="18" height="33" rx="8" fill="#d68f65"/>
+ <ellipse cx="49" cy="176" rx="17" ry="9" fill="${girl?'#e65d9e':'#365dba'}"/><ellipse cx="83" cy="176" rx="17" ry="9" fill="${girl?'#e65d9e':'#365dba'}"/>
+ <path d="M35 94 Q20 116 30 149 Q65 163 100 149 Q108 115 95 94Z" fill="${girl?'#ff7fb1':'#4d9cdf'}" stroke="${girl?'#eb679d':'#337bba'}" stroke-width="3"/>
+ <path d="M37 108 L23 139" stroke="#dc976e" stroke-width="13" stroke-linecap="round"/><path d="M94 108 L109 137" stroke="#dc976e" stroke-width="13" stroke-linecap="round"/>
+ ${girl?'<path d="M29 123 Q65 116 103 124 L111 152 Q67 166 19 151Z" fill="#ffa5cf" stroke="#eb79b1" stroke-width="2"/><path d="M50 116L80 116" stroke="#fff2ee" stroke-width="4"/>':'<path d="M47 102 L83 102 L89 133 L42 133 Z" fill="#72b6ed" opacity=".5"/><path d="M48 110L82 110" stroke="#e4f6ff" stroke-width="4"/>'}
+ <rect x="58" y="84" width="15" height="20" rx="7" fill="#d89468"/>
+ ${girl?'<circle cx="25" cy="59" r="18" fill="#3e2c32"/><circle cx="107" cy="59" r="18" fill="#3e2c32"/><circle cx="22" cy="61" r="9" fill="#e86ba6"/><circle cx="110" cy="61" r="9" fill="#e86ba6"/>':'<path d="M25 48 Q17 6 66 12 Q115 7 106 52Z" fill="#3c302c"/>'}
+ <ellipse cx="65" cy="61" rx="42" ry="45" fill="#eeb58a" stroke="#db9f75" stroke-width="1"/>
+ <ellipse cx="23" cy="65" rx="7" ry="11" fill="#df9e75"/><ellipse cx="107" cy="65" rx="7" ry="11" fill="#df9e75"/>
+ <path d="M25 48 Q27 9 67 14 Q106 15 105 50 Q77 38 62 27 Q44 47 25 48Z" fill="#352b2d"/>
+ ${girl?'<path d="M32 38 Q48 21 61 29" fill="none" stroke="#ff9fc4" stroke-width="6" stroke-linecap="round"/>':''}
+ <ellipse cx="51" cy="64" rx="5" ry="7" fill="#222e40"/><ellipse cx="80" cy="64" rx="5" ry="7" fill="#222e40"/>
+ <circle cx="53" cy="62" r="1.7" fill="#fff"/><circle cx="82" cy="62" r="1.7" fill="#fff"/>
+ <ellipse cx="40" cy="77" rx="9" ry="5" fill="#ef8d8a" opacity=".45"/><ellipse cx="89" cy="77" rx="9" ry="5" fill="#ef8d8a" opacity=".45"/>
+ <path d="M57 81 Q65 91 74 81" stroke="#934d48" stroke-width="3" fill="none" stroke-linecap="round"/>
+ </svg></span>`;
+}
+function tree(cls=''){return `<div class="tree ${cls}"><div class="trunk"></div><div class="crown"></div></div>`}
+function icons(){return `<span class="cloud a"></span><span class="cloud b"></span><span class="sun"></span>`}
+function header(title,subtitle='HUTAN AJAIB'){
+ return `<header class="topbar"><button class="iconbtn" data-action="back" aria-label="Kembali">‹</button><div class="heading">${title}<span class="sub">${subtitle}</span></div><button class="star-count" data-action="open-settings" aria-label="Lihat pencapaian dan pengaturan">⭐ ${total()}/3</button></header>`;
+}
+function stepper(n,length){return `<div class="stepper" aria-label="Tahap ${n+1} dari ${length}">${Array.from({length},(_,i)=>`<i class="${i<n?'active':i===n?'now':''}"></i>`).join('')}</div>`}
+function guide(text){lastPrompt=text;return `<section class="guide">${actor('atalah',67)}<div class="speech">${text}</div><button class="replay" data-action="replay" aria-label="Dengarkan ulang">🔊</button></section>`}
+function renderHome(){
+ return `<section class="screen cover">
+ <div class="cover-top"><div class="brand-small">✨ GAME BELAJAR & BERMAIN ✨</div><h1>Bilqis <em>&</em><br>Abang Atalah<small>Petualangan Dunia Ajaib</small></h1><p>Ayo jelajahi Hutan Ajaib bersama kakak dan adik!</p></div>
+ <div class="landscape">${icons()}<div class="hill"></div><div class="hill r"></div><div class="grass"></div><div class="path"></div>${tree('left')}${tree('right')}<span class="flower" style="left:19%;bottom:14%">🌸</span><span class="flower" style="right:14%;bottom:16%;animation-delay:-.8s">🌼</span><span class="flower" style="right:33%;bottom:28%;animation-delay:-1.1s">🦋</span><div class="actors">${actor('bilqis',124)}${actor('atalah',131)}</div></div>
+ <div class="cover-bottom"><div style="display:flex;justify-content:center;gap:8px"><span class="pill">🔤 A–Z Acak</span><span class="pill">🍎 Angka</span><span class="pill">🐰 Hewan</span></div>
+ <button data-action="start" class="btn green full">▶ Mulai Petualangan!</button>
+ <button data-action="open-settings" class="btn ghost full small">⚙️ Pengaturan suara & orang tua</button>
+ <p class="note">Tidak perlu internet • Tanpa iklan • Bisa dimainkan ulang</p></div>
+ </section>`;
+}
+function renderMap(){
+ const tasks=Object.entries(games).map(([key,g],i)=>`<button class="task" data-action="open-task" data-game="${key}" aria-label="Main ${g.title}"><span class="square ${i===1?'yellow':i===2?'mint':''}">${g.emoji}</span><span><b>${g.title} ${done(key)?'⭐':''}</b><small>${[`26 huruf diacak • ${saved.alphabet.mastered.length}/26 terkumpul`,'Hitung apel, pisang, stroberi','Beri makan kelinci Lala'][i]}</small></span><span class="go">›</span></button>`).join('');
+ return `<section class="screen">${header('Hutan Ajaib','PETA PETUALANGAN')}<main class="content">
+ <div class="map-lead"><div><h2>Ayo Jelajahi! 🌳</h2><p>Bilqis & Atalah siap bermain</p></div><span class="pill">⭐ ${total()} bintang</span></div>
+ <div class="scene" id="scene" data-action="walk">${icons()}${tree('left')}${tree('right')}
+ <div class="map-hint">Sentuh gambar untuk bermain 👇</div>
+ <button class="hotspot hletters ${done('letters')?'done':''}" data-action="open-task" data-game="letters"><span class="emoji">🔤</span>Cari Huruf</button>
+ <button class="hotspot hcount ${done('count')?'done':''}" data-action="open-task" data-game="count"><span class="emoji">🍎</span>Hitung Buah</button>
+ <button class="hotspot hfeed ${done('feed')?'done':''}" data-action="open-task" data-game="feed"><span class="emoji">🐰</span>Kelinci Lala</button>
+ <div class="walkers ${walking?'walk':''}" id="walkers" style="left:${moveX}%">${actor('bilqis',76)}${actor('atalah',81)}</div>
+ <span class="flower" style="left:4%;bottom:6%">🌻</span><span class="flower" style="right:4%;bottom:6%">🌷</span>
+ </div>
+ <div class="task-title">🎯 Pilih Misi Seru</div><div class="tasklist">${tasks}<button class="task" data-action="open-full-letters" aria-label="Mainkan semua huruf A hingga Z dalam satu permainan"><span class="square yellow">🏆</span><span><b>Tantangan A–Z Penuh</b><small>Mainkan semua ${saved.alphabet.remaining.length||26} huruf tersisa sekaligus, urutan acak</small></span><span class="go">›</span></button><button class="task" data-action="open-book" aria-label="Buka buku interaktif 26 huruf"><span class="square">📖</span><span><b>Buku A–Z Lengkap</b><small>Sentuh huruf mana pun untuk mendengarnya</small></span><span class="go">›</span></button></div>
+ <p class="caption" style="text-align:center;margin:18px 0 4px">Selesaikan 3 misi untuk mendapatkan 3 bintang ajaib.</p>
+ </main><div class="footer-credits">Bilqis & Abang Atalah • v0.2 A–Z Acak</div></section>`;
+}
+function renderLetters(){
+ const w=letterSession[stage],complete=wrong==='correct';
+ if(!w)return `<section class="screen">${header('Hutan Huruf')}<main class="content"><p>Huruf belum siap. Kembali ke peta dan coba lagi.</p><button class="btn full green" data-action="map">Kembali ke Peta</button></main></section>`;
+ return `<section class="screen game">${header('Hutan Huruf','MISI 1 • A–Z ACAK')}<main class="content">
+ ${alphabetProgress(complete?'':w.letter)}
+ <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 8px;gap:8px"><span class="pill">🎲 Urutan acak</span><span class="pill">${letterMode==='full'?'Tantangan A–Z':'Sesi ini'}: ${stage+1}/${letterSession.length}</span></div>
+ ${guide(complete?`Horee! Benar, Bilqis! Huruf ${w.sound} untuk ${w.noun}.`:`Bilqis, temukan huruf ${w.sound}, yuk! ${w.sound} untuk ${w.noun}.`)}
+ <div class="panel"><h2 class="game-title">Cari Huruf ${w.letter}!</h2><p class="game-help">Lihat gambar ${w.noun}, lalu sentuh huruf yang disebut Atalah</p>
+ <div class="letter-illustration" aria-label="Gambar ${w.noun}">${w.emoji}</div>
+ <div class="choices">${w.options.map(o=>`<button class="choice ${o===wrong?'wrong':''}" data-action="pick-letter" data-letter="${o}" ${complete?'disabled':''} aria-label="Huruf ${o}">${o}</button>`).join('')}</div>
+ ${complete?`<div class="feedback good">🌟 Benar! ${w.letter} untuk ${w.noun}. Hebat!</div><button class="btn green full" style="margin-top:14px" data-action="next-letter">${stage===letterSession.length-1?'Selesaikan Sesi ⭐':'Huruf Berikutnya ➜'}</button>`:wrong?'<div class="feedback">💛 Hampir! Perhatikan huruf besar yang dicari, ya.</div>':'<div class="caption" style="text-align:center;margin:14px 0 3px">Ada 3 pilihan. Ayo cari yang benar! ✨</div>'}
+ </div><p class="caption" style="text-align:center">${letterMode==='full'?'Mode tantangan penuh: semua huruf tersisa ditampilkan acak. Kemajuan disimpan setelah setiap jawaban benar.':'Setiap sesi 5–6 huruf acak. Mainkan beberapa sesi untuk menemukan semua 26 huruf tanpa pengulangan.'}</p>
+ </main></section>`;
+}
+function renderAlphabetBook(){
+ return `<section class="screen game">${header('Buku A–Z','26 HURUF INTERAKTIF')}<main class="content">
+ <h2 class="game-title">📖 Buku Huruf Bilqis</h2><p class="game-help">Sentuh huruf apa pun. Abang Atalah akan menyebut huruf dan bendanya.</p>
+ ${alphabetProgress()}
+ <div class="alphabet-book-grid">${words.map(w=>`<button class="alphabet-book-card ${saved.alphabet.mastered.includes(w.letter)?'learned':''}" data-action="listen-letter" data-letter="${w.letter}" aria-label="Dengarkan huruf ${w.letter} untuk ${w.noun}"><span class="book-emoji">${w.emoji}</span><span class="book-letter">${w.letter}</span><small>${w.noun}</small></button>`).join('')}</div>
+ <p class="caption" style="text-align:center;margin-top:13px">Semua A sampai Z dapat dimainkan kapan saja. Ketuk 🔊 pada permainan untuk mengulang petunjuk.</p>
+ <button class="btn green full" style="margin-top:10px" data-action="open-task" data-game="letters">🎲 Main 5–6 Huruf Acak</button><button class="btn purple full" style="margin-top:10px" data-action="open-full-letters">🏆 Main Semua Huruf Tersisa</button>
+ </main></section>`;
+}
+function renderCount(){
+ const r=rounds[stage],finished=chosen.size===r.n;
+ return `<section class="screen game">${header('Sungai Buah','MISI 2 • ANGKA')}<main class="content">${stepper(stage,rounds.length)}
+ ${guide(finished?`Hebat Bilqis! Ada ${r.n} ${r.name}. Abang bangga!`:`Ayo Bilqis, hitung ${r.n} ${r.name} ini. Sentuh satu per satu, ya!`)}
+ <div class="panel"><h2 class="game-title">Ayo Hitung! 🍀</h2><p class="game-help">Sentuh semua buah, satu per satu</p>
+ <div class="count-card"><div class="big-number">${chosen.size} <span style="font-size:32px;color:#c0a87d">/ ${r.n}</span></div><p>${chosen.size===0?'Mulai menghitung, yuk!':`Sudah ${chosen.size} ${r.name}!`}</p></div>
+ <div class="produce-row">${Array.from({length:r.n},(_,i)=>`<button class="produce ${chosen.has(i)?'chosen':''}" data-action="tap-fruit" data-idx="${i}" ${chosen.has(i)?'disabled':''} aria-label="${r.name} nomor ${i+1}">${r.fruit}</button>`).join('')}</div>
+ ${finished?`<div class="feedback good">🎉 Wah! Hitunganmu tepat!</div><button class="btn green full" style="margin-top:14px" data-action="next-count">${stage===rounds.length-1?'Ambil Bintang ⭐':'Lanjut Hitung! ➜'}</button>`:`<p class="caption" style="text-align:center">${r.n-chosen.size} buah lagi. Kamu pasti bisa! 😊</p>`}
+ </div></main></section>`;
+}
+function renderFeed(){
+ const completed=feed>=3;
+ return `<section class="screen game">${header('Rumah Kelinci','MISI 3 • HEWAN')}<main class="content">
+ ${guide(completed?'Terima kasih, Bilqis! Kelinci Lala sudah kenyang. Hore!':'Lala kelinci lapar, Bilqis. Ayo beri tiga wortel! Ketuk atau seret wortelnya ke Lala.')}
+ <div class="panel"><h2 class="game-title">Lala si Kelinci 🐰</h2><p class="game-help">Beri 3 wortel kepada Lala</p>
+ <div class="rabbit-world" id="rabbit-target" aria-label="Kelinci Lala tempat meletakkan wortel"><div class="rabbit ${completed?'happy':''}">🐰</div></div>
+ <div class="feed-tray"><p>🥕 Sentuh wortel, atau geser ke kelinci!</p><div class="carrots">${[0,1,2].map(i=>`<button class="carrot ${i<feed?'eaten':''}" data-action="feed-carrot" data-idx="${i}" ${i<feed?'disabled':''} aria-label="Berikan wortel ${i+1}">🥕</button>`).join('')}</div></div>
+ <div class="sticker-row">${[0,1,2].map(i=>`<span style="filter:${i<feed?'none':'grayscale(1) opacity(.3)'}">🥕</span>`).join('')}</div>
+ ${completed?`<div class="feedback good">💚 Lala senang sekali! Kamu hebat!</div><button class="btn green full" style="margin-top:14px" data-action="end-feed">Ambil Bintang ⭐</button>`:`<p class="caption" style="text-align:center;margin-bottom:0">${feed} dari 3 wortel sudah diberikan</p>`}
+ </div></main></section>`;
+}
+function renderReward(){
+ const g=games[task],all=total()===3;
+ return `<section class="screen reward"><div class="reward-content"><div class="brand-small">✨ MISI BERHASIL ✨</div><div class="stars">⭐ ⭐ ⭐</div><h2>Hebat, Bilqis!</h2><p>Bilqis dan Abang Atalah berhasil menyelesaikan <b>${g.title}</b>!</p><div class="sticker" aria-label="Hadiah ${g.name}">${g.prize}</div><div style="font-size:17px;font-weight:900;color:#b37a39">Dapat ${g.name}!</div>${task==='letters'?`<p style="font-size:14px">📖 Huruf terkumpul: <strong>${saved.alphabet.mastered.length}/26</strong>. ${saved.alphabet.mastered.length===26?'Seluruh A–Z selesai! 🌈':'Kembali ke peta dan mainkan lagi untuk lanjut ke huruf lainnya.'}</p>`:''}<div class="reward-actors">${actor('bilqis',95)}${actor('atalah',101)}</div>
+ ${all?'<p style="font-weight:950;color:#348e73">🌈 Hore! Semua Bintang Hutan Ajaib sudah ditemukan!</p>':''}
+ <div style="display:grid;gap:11px"><button class="btn green full" data-action="map">🗺️ ${all?'Main Lagi di Hutan':'Pilih Misi Berikutnya'}</button><button class="btn ghost full small" data-action="replay-game">🔄 Main Misi Ini Lagi</button></div></div></section>`;
+}
+function renderSettings(){
+ return `<section class="screen">${header('Untuk Orang Tua','PENGATURAN')}<main class="content settings"><h2>Halo, Ayah & Bunda 👋</h2><p class="caption">Game ini dirancang untuk bermain sambil belajar dengan cara yang menyenangkan.</p>
+ <div class="setting-card"><div class="row"><div><h3>🔊 Narasi suara</h3><p style="margin:0">Suara bahasa Indonesia dari HP</p></div><button class="toggle ${saved.sound?'on':''}" data-action="toggle-sound">${saved.sound?'AKTIF':'MATI'}</button></div><button class="btn blue small full" data-action="test-sound" style="margin-top:15px">▶ Coba suara Abang Atalah</button><p style="margin-top:12px;margin-bottom:0">Suara narasi memakai mesin pembaca yang tersedia di perangkat Android. Jika tidak terdengar atau terdengar kurang alami, teks petunjuk tetap muncul. Untuk kualitas suara manusia asli, rekaman dapat ditambahkan pada versi berikutnya.</p></div>
+ <div class="setting-card"><h3>🔤 Progres Huruf A–Z</h3><p>Huruf diacak tanpa pengulangan hingga A–Z selesai. Bisa bermain 5–6 huruf per sesi atau seluruh huruf tersisa sekaligus. Buku A–Z bisa dibuka kapan saja.</p>${alphabetProgress()}<p>Putaran A–Z lengkap: <strong>${saved.alphabet.cycles}</strong> kali.</p><button class="btn blue small full" data-action="open-book">📖 Buka Buku A–Z</button></div>
+ <div class="setting-card"><h3>🏆 Kemajuan Belajar</h3><p>${total()} dari 3 misi sudah diselesaikan. Setiap permainan bisa diulang kapan saja.</p><div class="sticker-row">${Object.keys(games).map(k=>`<span style="filter:${done(k)?'none':'grayscale(1) opacity(.28)'}">${games[k].prize}</span>`).join('')}</div></div>
+ <div class="setting-card"><h3>🛡️ Privasi & keamanan</h3><p>Tidak ada iklan, login, pembayaran, atau pengiriman data ke server. Progres disimpan di browser HP ini. Menghapus data browser dapat menghapus progres.</p></div>
+ <div class="setting-card"><h3>🔁 Ulangi dari awal</h3><p>Hapus bintang, stiker, dan progres huruf A–Z yang sudah terkumpul.</p><button class="btn ghost small full" data-action="reset-ask">Reset kemajuan (orang tua)</button></div>
+ <div class="setting-card"><h3>📱 Tips penggunaan Android</h3><p>Buka game ini di Chrome Android, tekan tombol Mulai sekali untuk mengaktifkan audio, lalu gunakan sentuhan untuk bermain. Mode portrait/vertikal disarankan.</p></div>
+ </main></section>`;
+}
+function render(){
+ const pages={home:renderHome,map:renderMap,letters:renderLetters,book:renderAlphabetBook,count:renderCount,feed:renderFeed,reward:renderReward,settings:renderSettings};
+ try{APP.innerHTML=(pages[screen]||renderHome)()}catch(err){APP.innerHTML='<main style="padding:26px"><h2>Permainan mengalami masalah</h2><p>Silakan muat ulang halaman.</p><button onclick="location.reload()">Muat ulang</button></main>';console.error(err)}
+}
+function messageFor(){
+ if(screen==='map')return 'Halo Bilqis! Abang Atalah di sini. Ayo pilih petualangan kita!';
+ if(screen==='letters'){const w=letterSession[stage];if(!w)return '';return wrong==='correct'?`Hore! Benar, Bilqis. Huruf ${w.sound} untuk ${w.noun}.`:`Bilqis, cari huruf ${w.sound}, yuk! ${w.sound} untuk ${w.noun}.`}
+ if(screen==='book')return 'Ini Buku A sampai Z. Sentuh salah satu huruf untuk mendengarnya!';
+ if(screen==='count'){const r=rounds[stage];return chosen.size===r.n?`Hebat, Bilqis! Ada ${r.n} ${r.name}.`:`Ayo Bilqis, hitung ${r.n} ${r.name}. Sentuh buahnya satu per satu!`}
+ if(screen==='feed')return feed>=3?'Hore! Terima kasih Bilqis. Lala sudah kenyang.':'Bilqis, Lala lapar. Ayo beri tiga wortel!';
+ if(screen==='reward')return 'Hore Bilqis! Kamu hebat! Abang Atalah senang sekali!';
+ return 'Halo Bilqis! Ayo bermain bersama Abang Atalah!';
+}
+function voices(){
+ try{const arr=speechSynthesis.getVoices();availableVoice=arr.find(v=>/\bid[-_]ID\b/i.test(v.lang))||arr.find(v=>/indones/i.test(v.name))||null}catch(e){}
+}
+if('speechSynthesis' in window){voices();window.speechSynthesis.onvoiceschanged=voices}
+function tone(kind='tap'){
+ if(!saved.sound)return;
+ try{
+ const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+ if(!audioCtx)audioCtx=new AC();
+ if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+ const now=audioCtx.currentTime;
+ const seq=kind==='win'?[523,659,784,1047]:kind==='success'?[523,659,784]:kind==='no'?[330,280]:[650];
+ seq.forEach((freq,i)=>{const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),start=now+i*(kind === 'tap' ? 0 : 0.095);osc.type='sine';osc.frequency.setValueAtTime(freq,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(.11,start+.02);gain.gain.exponentialRampToValueAtTime(.0001,start+.15);osc.connect(gain).connect(audioCtx.destination);osc.start(start);osc.stop(start+.16)});
+ }catch(e){console.debug('Audio tidak tersedia:',e)}
+}
+function speak(text){
+ if(!saved.sound)return;
+ try{
+ if(!('speechSynthesis' in window))return;
+ const synth=window.speechSynthesis;synth.cancel();
+ const u=new SpeechSynthesisUtterance(text);u.lang='id-ID';u.rate=.86;u.pitch=1.09;u.volume=1;if(availableVoice)u.voice=availableVoice;
+ synth.speak(u);
+ }catch(e){console.debug('Narasi tidak tersedia:',e)}
+}
+function narrate(){speak(messageFor())}
+function go(s){screen=s;wrong='';render();window.scrollTo(0,0)}
+function enterGame(key,mode='short'){
+ if(!games[key])return;
+ task=key;stage=0;wrong='';chosen=new Set();feed=0;
+ if(key==='letters'){
+  if(saved.alphabet.remaining.length===0){
+   const last=saved.alphabet.lastLetter;
+   const old=saved.alphabet;
+   saved.alphabet={...freshAlphabet(last),cycles:old.cycles,totalSolved:old.totalSolved};
+  }
+  const rem=saved.alphabet.remaining;
+  letterMode=mode;
+  // Short sessions are child-friendly; full mode plays every remaining letter.
+  letterSession=rem.slice(0,mode==='full'?rem.length:(rem.length<=6?6:5)).map(makeQuestion);
+  safeStore();
+ }
+ go(key);tone('tap');narrate();
+}
+function award(){if(!done(task)){saved.completed.push(task);safeStore()}go('reward');tone('win');narrate()}
+function feedOne(){if(screen!=='feed'||feed>=3)return;feed++;tone(feed===3?'success':'tap');render();if(feed===3)speak('Hore! Lala sudah kenyang! Terima kasih, Bilqis!');else speak(`${feed}. Ayo kasih wortel lagi!`)}
+function walk(evt){
+ if(screen!=='map')return;
+ const zone=document.getElementById('scene'),box=zone.getBoundingClientRect();moveX=Math.max(23,Math.min(77,(evt.clientX-box.left)/box.width*100));walking=true;
+ const el=document.getElementById('walkers');if(el){el.style.left=moveX+'%';el.classList.add('walk')}
+ setTimeout(()=>{walking=false;const current=document.getElementById('walkers');if(current)current.classList.remove('walk')},850);
+ tone();
+}
+function resetAsk(){
+ // Two-step protective prompt: buttons are behind a parent confirmation screen.
+ const result=window.prompt('Khusus orang tua: berapa hasil 3 + 4? Ketik jawabannya untuk menghapus progres.');
+ if(result===null)return;
+ if(result.trim()==='7'){saved.completed=[];saved.alphabet=freshAlphabet();safeStore();tone('success');render();alert('Progres belajar telah direset.')}else alert('Jawabannya belum benar. Progres tidak berubah.');
+}
+APP.addEventListener('click',evt=>{
+ const el=evt.target.closest('[data-action]');if(!el)return;
+ const action=el.dataset.action;
+ if(action==='feed-carrot' && Date.now()<ignoreClickUntil)return;
+ switch(action){
+ case 'start':go('map');tone('success');narrate();break;
+ case 'back': if(screen==='settings'){go(window._fromScreen||'home')}else if(screen==='map'){go('home')}else if(screen==='reward'){go('map')}else{go('map')}tone();break;
+ case 'map':go('map');tone();narrate();break;
+ case 'walk':walk(evt);break;
+ case 'open-task':enterGame(el.dataset.game);break;
+ case 'open-full-letters':enterGame('letters','full');break;
+ case 'open-book':go('book');tone();narrate();break;
+ case 'listen-letter':{
+  const w=byLetter[el.dataset.letter];if(!w)break;
+  tone('tap');speak(`Huruf ${w.sound}. ${w.sound} untuk ${w.noun}. Ayo ucapkan, ${w.sound}!`);
+  break;
+ }
+ case 'pick-letter': {
+  if(wrong==='correct')break;
+  const w=letterSession[stage];if(!w)break;
+  const isGood=el.dataset.letter===w.letter;
+  wrong=isGood?'correct':el.dataset.letter;
+  if(isGood){
+   const a=saved.alphabet;
+   if(!a.mastered.includes(w.letter)){
+    a.mastered.push(w.letter);
+    a.remaining=a.remaining.filter(l=>l!==w.letter);
+    a.totalSolved++;a.lastLetter=w.letter;
+    if(a.mastered.length===26)a.cycles++;
+    safeStore();
+   }
+  }
+  tone(isGood?'success':'no');render();
+  if(isGood)narrate();else speak('Hehe, belum yang itu. Coba lagi, yuk Bilqis!');
+  break;
+ }
+ case 'next-letter':if(wrong!=='correct')break;if(stage>=letterSession.length-1)award();else{stage++;wrong='';render();tone('tap');narrate()}break;
+ case 'tap-fruit':{
+  const index=Number(el.dataset.idx),r=rounds[stage];if(chosen.has(index)||chosen.size>=r.n)break;
+  chosen.add(index);tone(chosen.size===r.n?'success':'tap');render();
+  if(chosen.size===r.n)narrate();else speak(String(chosen.size));break;
+ }
+ case 'next-count':if(stage>=rounds.length-1)award();else{stage++;chosen=new Set();render();tone();narrate()}break;
+ case 'feed-carrot':feedOne();break;
+ case 'end-feed':award();break;
+ case 'replay-game':enterGame(task,letterMode);break;
+ case 'replay':tone('tap');narrate();break;
+ case 'open-settings':window._fromScreen=screen;go('settings');break;
+ case 'toggle-sound':saved.sound=!saved.sound;safeStore();if(!saved.sound&&'speechSynthesis'in window)try{speechSynthesis.cancel()}catch(e){}render();if(saved.sound){tone('success');speak('Suara sudah aktif. Halo Bilqis dan Abang Atalah!')}break;
+ case 'test-sound':tone('success');speak('Halo Bilqis! Ini Abang Atalah. Ayo kita bermain di Hutan Ajaib!');break;
+ case 'reset-ask':resetAsk();break;
+ default:break;
+ }
+});
+// Reliable pointer dragging on mobile; tapping remains a fully supported alternative.
+APP.addEventListener('pointerdown',evt=>{
+ const el=evt.target.closest('[data-action="feed-carrot"]');if(!el||el.disabled||screen!=='feed')return;
+ drag={el,startX:evt.clientX,startY:evt.clientY,moved:false};
+ try{el.setPointerCapture(evt.pointerId)}catch(e){}
+});
+APP.addEventListener('pointermove',evt=>{
+ if(!drag||screen!=='feed')return;
+ const dx=evt.clientX-drag.startX,dy=evt.clientY-drag.startY;
+ if(Math.hypot(dx,dy)>9)drag.moved=true;
+ if(drag.moved){drag.el.classList.add('dragging');drag.el.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`}
+});
+function endDrag(evt){
+ if(!drag)return;
+ const d=drag;drag=null;d.el.style.transform='';d.el.classList.remove('dragging');
+ if(!d.moved)return; // regular click is handled above
+ ignoreClickUntil=Date.now()+500;
+ const target=document.getElementById('rabbit-target');if(!target)return;
+ const r=target.getBoundingClientRect();
+ if(evt.clientX>=r.left-24&&evt.clientX<=r.right+24&&evt.clientY>=r.top-24&&evt.clientY<=r.bottom+24)feedOne();
+ else speak('Geser wortelnya ke kelinci Lala, ya!');
+}
+APP.addEventListener('pointerup',endDrag);APP.addEventListener('pointercancel',()=>{if(drag){drag.el.style.transform='';drag.el.classList.remove('dragging')}drag=null});
+// App is intentionally completely self-contained: no requests, trackers, or external libraries.
+render();
+})();
+</script>
+</body>
+</html>
